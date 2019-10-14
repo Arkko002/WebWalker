@@ -1,0 +1,17 @@
+name: WebWalker
+version: 0.1.0
+
+authors:
+  - your-name-here <your-email-here>
+
+targets:
+  WebWalker:
+    main: src/WebWalkerCLI.cr
+
+dependencies:
+  crystagiri:
+    github: madeindjs/crystagiri
+
+crystal: 0.31.0
+
+license: MIT

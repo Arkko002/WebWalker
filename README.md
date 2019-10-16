@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/Arkko002/WebWalker.svg?branch=master)](https://travis-ci.com/Arkko002/WebWalker)
+
 # WebWalker
 
 TODO: Write a description here

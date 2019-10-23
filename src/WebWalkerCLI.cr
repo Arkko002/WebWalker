@@ -22,5 +22,5 @@ OptionParser.parse do |parser|
     parser.on("-h", "--help", "Show help") { puts parser }
 end
 
-walker = WebWalker::WebWalker.new options
+walker = WebWalker::WebWalker.new(options)
 walker.start_scraping()

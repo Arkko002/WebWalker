@@ -1,10 +1,10 @@
 require "uri"
 require "http/client"
 require "crystagiri"
-require "./WebWalker/Website"
-require "./WebWalker/Page"
-require "./WebWalker/ScrapingOptions"
-require "./WebWalker/UrlParser"
+require "./web-walker/data/website.cr"
+require "./web-walker/data/page.cr"
+require "./web-walker/data/scraping-options.cr"
+require "./web-walker/url-parser.cr"
 
 # TODO: Write documentation for `WebWalker`
 module WebWalker

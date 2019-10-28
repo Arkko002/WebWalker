@@ -1,5 +1,5 @@
 require "option_parser"
-require "./WebWalker"
+require "./web-walker"
 
 options = Hash(String, String).new
 options["searched_value"] = ""

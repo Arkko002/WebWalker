@@ -1,10 +1,11 @@
 require "uri"
 require "http/client"
 require "crystagiri"
-require "./web-walker/data/website.cr"
-require "./web-walker/data/page.cr"
-require "./web-walker/data/scraping-options.cr"
-require "./web-walker/url-parser.cr"
+require "./web-walker/data/website"
+require "./web-walker/data/page"
+require "./web-walker/data/scraping-options"
+require "./web-walker/url-parser"
+require "./website-saver"
 
 # TODO: Write documentation for `WebWalker`
 module WebWalker
@@ -20,15 +21,14 @@ module WebWalker
     def initialize(scraping_options : Hash(String, String))
       @scraping_options = ScrapingOptions.new(scraping_options)
       @scraped_website = Website.new(Hash(String, Page).new())
+      @website_saver = WebsiteSaver::WebsiteSaver.new
     end
 
     def start_scraping()
       scrape_page(@scraping_options.initial_url)
-      debug_print()
     end
 
     private def scrape_page(page_url : String)
-      #puts page_url
       begin
         response = HTTP::Client.get page_url
       rescue exception
@@ -39,6 +39,7 @@ module WebWalker
       page = Page.new(response.as(HTTP::Client::Response), page_url)
       search_for_links(page)
       @scraped_website.store_scraped_page(page)
+      @website_saver.save_to_file(page)
       scrape_page_links(page)
     end
 
@@ -78,15 +79,8 @@ module WebWalker
           i += 1
           next
         end
-        #puts page.internal_links[i]
         scrape_page(page.internal_links[i])
         i += 1
-      end
-    end
-
-    def debug_print()
-      @scraped_website.scraped_pages.each_key do |key|
-        puts key
       end
     end
   end

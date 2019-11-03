@@ -1,4 +1,4 @@
-require "./Page"
+require "./page"
 
 class Website
   getter scraped_pages : Hash(String, Page)

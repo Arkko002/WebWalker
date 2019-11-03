@@ -6,11 +6,16 @@ authors:
 
 targets:
   WebWalker:
-    main: src/WebWalkerCLI.cr
+    main: src/web-walker-cli.cr
 
 dependencies:
   crystagiri:
     github: madeindjs/crystagiri
+    
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 0.10.1
 
 crystal: 0.31.0
 

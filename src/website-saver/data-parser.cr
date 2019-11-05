@@ -5,7 +5,7 @@ require "../web-walker/data/page.cr"
 module WebsiteSaver
   class DataParser
     def generate_xml_header()
-      XML.build() do |xml|
+      XML.build() do |_|
       end
     end
 

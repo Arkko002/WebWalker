@@ -3,6 +3,7 @@ require "./website-saver/data-parser.cr"
 require "./web-walker/data/website.cr"
 require "./web-walker/data/page.cr"
 
+#TODO Save HTMLComponents
 module WebsiteSaver
   class WebsiteSaver
     def initialize()

@@ -4,6 +4,11 @@ require "../web-walker/data/page.cr"
 
 module WebsiteSaver
   class DataParser
+    def generate_xml_header()
+      XML.build() do |xml|
+      end
+    end
+
     def data_to_xml(data)
       case data
       when Website
@@ -13,16 +18,18 @@ module WebsiteSaver
       end
     end
 
-    def website_to_xml(website : Website)
-      XML.build() do |xml|
+    private def website_to_xml(website : Website)
+      website_xml = XML.build() do |xml|
         website.scraped_pages.each_key do |key|
           xml.element("link") {xml.text key}
         end
       end
+
+      remove_xml_header(website_xml)
     end
 
-    def page_to_xml(page : Page)
-      XML.build() do |xml|
+    private def page_to_xml(page : Page)
+      page_xml = XML.build() do |xml|
         xml.element("page") do
           xml.element("url") {xml.text page.url}
 
@@ -41,6 +48,15 @@ module WebsiteSaver
             end
           end
         end
+      end
+
+      remove_xml_header(page_xml)
+    end
+
+    private def remove_xml_header(xml : String)
+      header_end_index = xml.index(">")
+      if !header_end_index.nil?
+        xml[header_end_index + 1, xml.size]
       end
     end
   end

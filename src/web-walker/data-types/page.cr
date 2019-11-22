@@ -14,19 +14,16 @@ class Page
     @internal_links = Array(String).new
     @external_links = Array(String).new
     @html_components = Array(HTMLComponent).new
-    @found_data = Array(Data).new
   end
 
   def store_scraped_links(initial_url : String, links : Array(String))
-    i = 0
-    while i < links.size
-        #TODO Find if link is actually internal, not if link contains initial url
-        if links[i].scan(initial_url).size != 0
-          @internal_links.push(links[i])
-        else
-          @external_links.push(links[i])
-        end
-      i += 1
+    links.each() do |link|
+      #TODO Find if link is actually internal, not if link contains initial url
+      if link.scan(initial_url).size != 0
+        @internal_links.push(link)
+      else
+        @external_links.push(link)
+      end
     end
   end
 end

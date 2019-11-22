@@ -3,9 +3,8 @@
 class HTMLComponent
   property id : String?
   property component_class : String?
-  property found_data : Array(Class)
   property content : String
 
-  def initialize(@id, @component_class, @content, @found_data)
+  def initialize(@id, @component_class, @content)
   end
 end

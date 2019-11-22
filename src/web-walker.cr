@@ -111,14 +111,11 @@ module WebWalker
     end
 
     private def scrape_page_links(page : Page)
-      i = 0
-      while i < page.internal_links.size
-        if @scraped_website.scraped_pages.has_key?(page.internal_links[i])
-          i += 1
+      page.internal_links.each() do |link|
+        if @scraped_website.scraped_pages.has_key?(link)
           next
         end
-        scrape_page(page.internal_links[i])
-        i += 1
+        scrape_page(link)
       end
     end
   end

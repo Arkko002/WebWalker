@@ -1,7 +1,7 @@
 require "json"
 require "./website-saver/data-parser.cr"
-require "./web-walker/data/website.cr"
-require "./web-walker/data/page.cr"
+require "./web-walker/data-types/website.cr"
+require "./web-walker/data-types/page.cr"
 
 #TODO Save HTMLComponents
 module WebsiteSaver

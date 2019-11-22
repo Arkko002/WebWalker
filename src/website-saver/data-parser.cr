@@ -1,6 +1,6 @@
 require "xml"
-require "../web-walker/data/website.cr"
-require "../web-walker/data/page.cr"
+require "../web-walker/data-types/website.cr"
+require "../web-walker/data-types/page.cr"
 
 module WebsiteSaver
   class DataParser

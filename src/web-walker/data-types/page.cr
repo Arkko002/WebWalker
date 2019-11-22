@@ -14,6 +14,7 @@ class Page
     @internal_links = Array(String).new
     @external_links = Array(String).new
     @html_components = Array(HTMLComponent).new
+    @found_data = Array(Data).new
   end
 
   def store_scraped_links(initial_url : String, links : Array(String))

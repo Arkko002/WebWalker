@@ -1,0 +1,10 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "CompileAndAnalyze",
+        "command": "shards build --debug ${workspaceFolderBasename} && ameba ${workspaceFolderBasename}",
+        "type": "shell",
+      }
+    ]
+  }

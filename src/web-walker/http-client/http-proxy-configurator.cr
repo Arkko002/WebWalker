@@ -1,5 +1,6 @@
 require "random"
 
+#TODO Add curl option
 class HTTPProxyConfigurator
   path_to_list : String
   proxy_list : Array(String)
@@ -15,6 +16,6 @@ class HTTPProxyConfigurator
   end
 
   def get_random_proxy()
-    return proxy_list[Random.rand % proxy_list.size]
+    proxy_list[Random.rand % proxy_list.size]
   end
 end

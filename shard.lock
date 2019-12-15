@@ -4,6 +4,10 @@ shards:
     github: crystal-ameba/ameba
     version: 0.10.1
 
+  commander:
+    github: mrrooijen/commander
+    version: 0.3.4
+
   crystagiri:
     github: madeindjs/crystagiri
     version: 0.3.5

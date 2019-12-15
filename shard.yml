@@ -11,6 +11,10 @@ targets:
 dependencies:
   crystagiri:
     github: madeindjs/crystagiri
+
+  commander:
+    github: mrrooijen/commander
+    version: ~> 0.3.4
     
 development_dependencies:
   ameba:

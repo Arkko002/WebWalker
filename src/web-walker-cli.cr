@@ -1,26 +1,35 @@
-require "option_parser"
+require "commander/src/commander"
 require "./web-walker"
 
-options = Hash(String, String).new
-options["searched_value"] = ""
-options["search_deep"] = "y"
+cli = Commander::Command.new do |cmd|
+  cmd.use = "WebWalker"
 
-OptionParser.parse do |parser|
-    parser.banner = "Usage: webwalker -u [URL] -v [Searched value (optional)]"
-
-    parser.missing_option { puts parser }
-
-    parser.invalid_option do |flag|
-      STDERR.puts "ERROR: #{flag} is not a valid option."
-      STDERR.puts parser
-      exit(1)
+  cmd.flags.add do |flag|
+    flag.name = "url"
+    flag.short = "-u"
+    flag.long = "--url"
+    flag.description = "Starting URL"
   end
 
-    parser.on("-u URL", "--url=URL", "Starting URL") { |url| options["url"] = url}
-    parser.on("-d DEEP", "--deep=DEEP", "Search through all found subpages? (\"y\" or \"n\")") { |deep| options["search_deep"] = deep }
-    parser.on("-v VALUE", "--value=VALUE", "Searched value") { |value| options["searched_value"] = value }
-    parser.on("-h", "--help", "Show help") { puts parser }
+  cmd.flags.add do |flag|
+    flag.name = "deep"
+    flag.short = "-d"
+    flag.long = "--deep"
+    flag.default = true
+    flag.description = "Should enter found links and scrape them?"
+  end
+
+  cmd.flags.add do |flag|
+    flag.name = "value"
+    flag.short = "-v"
+    flag.long = "--value"
+    flag.description = "Searched value (optional)"
+  end
+
+  cmd.run do |options, arguments|
+    walker = WebWalker::WebWalker.new(options)
+  end
 end
 
-walker = WebWalker::WebWalker.new(options)
-walker.start_scraping()
+
+

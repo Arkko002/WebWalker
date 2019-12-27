@@ -1,18 +1,20 @@
+abstract class AbstractUrlParser
+  abstract def parse_link(relative_link : String, page_url : String) : String?
+end
 
-class UrlParser
+class UrlParser < AbstractUrlParser
   @relative_link_regex = /^(?!www\.|(?:http|ftp)s?:\/\/|[A-Za-z]:\\|\/\/).*/
   @url_regex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/
 
-  def initialize(@relative_link : String, @site_url : String)
-  end
-
-  def parse_link() : String?
-    if is_fragment_identifier?(@relative_link)
+  def parse_link(relative_link : String, page_url : String) : String?
+    @relative_link = relative_link
+    @page_url = page_url
+    if is_fragment_identifier?(relative_link)
       return
     end
 
-    if is_valid_url?(@relative_link)
-      @relative_link
+    if is_valid_url?(relative_link)
+      relative_link
     else
       converted_link = parse_url_into_absolute()
       converted_link
@@ -35,24 +37,24 @@ class UrlParser
     return false
   end
 
-  private def parse_url_into_absolute() : String
-    if @relative_link[0, 2] == "//"
+  private def parse_url_into_absolute : String
+    if @relative_link.as(String)[0, 2] == "//"
       protocol_relative_into_absolute()
-    elsif @relative_link_regex.match(@relative_link)
-    #elsif @relative_link[0,1] == "/"
+    elsif @relative_link_regex.match(@relative_link.as(String))
+      # elsif @relative_link[0,1] == "/"
       relative_into_absolute()
     else
-      @site_url + @relative_link
+      @page_url.as(String) + @relative_link.as(String)
     end
   end
 
-  private def protocol_relative_into_absolute() : String
-    converted_link = @relative_link.gsub("//", "")
+  private def protocol_relative_into_absolute : String
+    converted_link = @relative_link.as(String).gsub("//", "")
     "https://" + converted_link
   end
 
-  private def relative_into_absolute() : String
-    link = URI.parse(@site_url).resolve(@relative_link).to_s
+  private def relative_into_absolute : String
+    link = URI.parse(@page_url.as(String)).resolve(@relative_link.as(String)).to_s
     link
   end
 end

@@ -1,4 +1,4 @@
-require "../web-walker/data-types/html-component.cr"
+require "../data-types/**"
 
 abstract class Data
   getter component_parent : HTMLComponent

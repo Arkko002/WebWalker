@@ -1,19 +1,23 @@
 require "./http-client"
+require "commander/src/commander/options"
 require "./page-scraper/**"
 require "./data-types/**"
 
-class PageScraper
+abstract class AbstractPageScraper
+  abstract def scrape_page(page_url : String)
+end
+
+class PageScraper < AbstractPageScraper
   getter scraped_website : Website
-  getter scraping_options
+  setter scraping_options : Commander::Options
+  setter url_parser : AbstractUrlParser
 
-  #TODO Add method to stop and resume scraping
-  def initialize(@scraping_options)
-    @scraped_website = Website.new(Hash(String, Page).new())
-
-    scrape_page(@scraping_options.string["url"])
+  # TODO Add method to stop and resume scraping
+  def initialize(@scraping_options, @url_parser)
+    @scraped_website = Website.new(Hash(String, Page).new)
   end
 
-  private def scrape_page(page_url : String)
+  def scrape_page(page_url : String)
     page = get_scraped_page(page_url)
     if page.nil?
       return
@@ -22,27 +26,23 @@ class PageScraper
     html_doc = create_html_doc(page)
     if html_doc.nil?
       @scraped_website.store_scraped_page(page)
-      @website_saver.save_to_file(page)
       return
     end
 
     links = search_for_links(page.url, html_doc)
-    page.store_scraped_links(@scraping_options.initial_url, links)
+    page.store_scraped_links(@scraping_options.string["url"], links)
 
     scraped_components = search_for_html_components(html_doc)
     page.html_components = scraped_components
 
     @scraped_website.store_scraped_page(page)
-    @website_saver.save_to_file(page)
     scrape_page_links(page)
   end
 
   private def get_scraped_page(page_url : String) : Page?
     begin
-      HTTPClient.new(page_url) do |client|
-        client.set_configurators(@scraping_options.path_to_proxies, @scraping_options.user_agent_list_adr)
-        response = client.get_page_with_spoofed_packet(page_url)
-      end
+      client = HTTPClient.new(@scraping_options, host: page_url)
+      response = client.get_page_with_spoofed_packet(page_url)
     rescue exception
       puts exception.message
       return
@@ -59,7 +59,7 @@ class PageScraper
     Crystagiri::HTML.new page.http_response.body
   end
 
-  private def search_for_links(page_url : String ,html_doc : Crystagiri::HTML) : Array(String)
+  private def search_for_links(page_url : String, html_doc : Crystagiri::HTML) : Array(String)
     parsed_urls = Array(String).new
 
     html_doc.where_tag("a") do |tag|
@@ -67,8 +67,7 @@ class PageScraper
         next
       end
 
-      url_parser = UrlParser.new tag.node["href"], page_url
-      parsed_url = url_parser.parse_link()
+      parsed_url = @url_parser.parse_link(tag.node["href"], page_url)
 
       if parsed_url.nil?
         next

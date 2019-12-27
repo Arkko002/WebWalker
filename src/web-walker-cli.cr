@@ -1,5 +1,6 @@
 require "commander/src/commander"
 require "./web-walker"
+require "./web-walker/**"
 
 cli = Commander::Command.new do |cmd|
   cmd.use = "WebWalker"
@@ -27,9 +28,13 @@ cli = Commander::Command.new do |cmd|
   end
 
   cmd.run do |options, arguments|
-    walker = WebWalker::WebWalker.new(options)
+    #TODO
+    url_parser = UrlParser.new
+    scraper = PageScraper.new(options, url_parser)
+
+    data_parser = DataParser.new
+    website_saver = WebsiteSaver.new(data_parser)
+
+    walker = WebWalker::WebWalker.new(options, website_saver, scraper)
   end
 end
-
-
-

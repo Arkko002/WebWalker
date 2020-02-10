@@ -3,7 +3,8 @@ require "./page"
 class Website
   getter scraped_pages : Hash(String, Page)
 
-  def initialize(@scraped_pages)
+  def initialize()
+    @scraped_pages = Hash(String, Page).new
   end
 
   def store_scraped_page(page : Page)

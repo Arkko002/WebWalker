@@ -1,4 +1,4 @@
-require "./data-types/**"
+require "../data-types/**"
 
 abstract class AbstractOutput
   abstract def output_all_xml(website : Website)

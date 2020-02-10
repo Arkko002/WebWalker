@@ -16,10 +16,10 @@ class Page
     @html_components = Array(HTMLComponent).new
   end
 
-  def store_scraped_links(initial_url : String, links : Array(String))
+  def store_scraped_links(links : Array(String))
     links.each() do |link|
       #TODO Find if link is actually internal, not if link contains initial url
-      if link.scan(initial_url).size != 0
+      if link.scan(@url).size != 0
         @internal_links.push(link)
       else
         @external_links.push(link)

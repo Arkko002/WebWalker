@@ -1,7 +1,6 @@
-require "./abstract-output"
 require "./output/**"
 require "./data-types/**"
-require "commander/src/commander/options"
+require "../../lib/commander/src/commander"
 
 # TODO Save HTMLComponents
 class OutputToFile < AbstractOutput
@@ -31,9 +30,9 @@ class OutputToFile < AbstractOutput
 
   def save_to_file(xml_string)
     if !File.exists?("scraped_xml")
-      File.write(@scraping_options.string["output_file"], @data_parser.generate_xml_header, mode: "a")
+      File.write("scraped_xml", @data_parser.generate_xml_header, mode: "a")
     end
 
-    File.write(@scraping_options.string["output_file"], xml_string, mode: "a")
+    File.write("scraped_xml", xml_string, mode: "a")
   end
 end

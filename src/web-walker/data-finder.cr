@@ -1,4 +1,4 @@
-require "crystagiri"
+require "../../lib/crystagiri/src/crystagiri"
 require "./data-finder/**"
 require "./data-types/**"
 
@@ -24,7 +24,8 @@ class DataFinder < AbstractDataFinder
   end
 
   private def find_contact_info : ContactInfo
-    address_data = LibPostal.address_parser_parse(@html_component.content, "", "")
+    #TODO
+    #address_data = LibPostal.address_parser_parse(@html_component.content, "", "")
     email_matchdata = @email_regex.match(@html_component.content)
     phone_number_matchdata = @phone_number_regex.match(@html_component.content)
 
@@ -41,6 +42,6 @@ class DataFinder < AbstractDataFinder
   private def find_product_info : PriceInfo
     # TODO Match for productTitle, productName etc. and use the match to .where_tag(MATCH)
     @html_doc
-    found_product = ProductInfo.new
+    #found_product = ProductInfo.new
   end
 end

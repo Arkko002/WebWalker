@@ -1,5 +1,5 @@
-require "./abstract-output"
 require "./output/**"
+require "./data-types/**"
 
 class OutputToConsole < AbstractOutput
   setter data_parser : AbstractDataParser

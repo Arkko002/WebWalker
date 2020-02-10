@@ -1,5 +1,6 @@
 require "./http-client"
-require "commander/src/commander/options"
+require "./http-client/abstract-http-client.cr"
+require "../../lib/commander/src/commander"
 require "./page-scraper/**"
 require "./data-types/**"
 
@@ -10,11 +11,14 @@ end
 class PageScraper < AbstractPageScraper
   getter scraped_website : Website
   setter scraping_options : Commander::Options
+  setter http_client : AbstractHTTPClient
   setter url_parser : AbstractUrlParser
 
   # TODO Add method to stop and resume scraping
-  def initialize(@scraping_options, @url_parser)
-    @scraped_website = Website.new(Hash(String, Page).new)
+  def initialize(@scraped_website, @scraping_options, @url_parser)
+    proxy_config = HTTPProxyConfigurator.new(@scraping_options.string["proxy_path"], "proxy_list")
+    header_config = HTTPHeaderConfigurator.new(@scraping_options.string["user_agent_path"], "user_agent_list")
+    @http_client = HTTPClient.new(proxy_config, header_config, host: @scraping_options.string["url"])
   end
 
   def scrape_page(page_url : String)
@@ -30,10 +34,9 @@ class PageScraper < AbstractPageScraper
     end
 
     links = search_for_links(page.url, html_doc)
-    page.store_scraped_links(@scraping_options.string["url"], links)
+    page.store_scraped_links(links)
 
-    scraped_components = search_for_html_components(html_doc)
-    page.html_components = scraped_components
+    page.html_components = search_for_html_components(html_doc)
 
     @scraped_website.store_scraped_page(page)
     scrape_page_links(page)
@@ -41,8 +44,7 @@ class PageScraper < AbstractPageScraper
 
   private def get_scraped_page(page_url : String) : Page?
     begin
-      client = HTTPClient.new(@scraping_options, host: page_url)
-      response = client.get_page_with_spoofed_packet(page_url)
+      response = @http_client.get_page_with_spoofed_packet(page_url)
     rescue exception
       puts exception.message
       return

@@ -1,2 +1,4 @@
 require "spec"
-require "../src/WebWalker"
+require "./**"
+require "../lib/commander/src/commander/options"
+require "../src/**"

@@ -43,7 +43,7 @@ class HTTPProxy
 
     socket << "CONNECT #{host}:#{port} HTTP/1.0\r\n"
 
-    if options[:user]
+    if options.has_key?(":user")
       credentials   =   Base64.strict_encode("#{options[:user]}:#{options[:password]}")
       credentials   =   "#{credentials}\n".gsub(/\s/, "")
       socket       <<   "Proxy-Authorization: Basic #{credentials}\r\n"
@@ -85,7 +85,7 @@ class HTTPProxy
     rescue
     end
 
-    return resp
+    resp
   end
 
 end

@@ -1,27 +1,21 @@
 require "random"
 require "time"
 require "./http-proxy"
+require "./abstract-http-configurator"
 
-#TODO Add curl option
-class HTTPProxyConfigurator
-  setter path_to_list : String
-  setter proxy_list : Array(String)
-
-  def initialize(@path_to_list)
-    @proxy_list = Array(String).new
-    load_proxies_from_path()
-  end
-
-  private def load_proxies_from_path()
-    #TODO Add support for CSV
-    proxy_str = File.read(@path_to_list)
-    proxy_str.split(",") { |s| @proxy_list << s }
-  end
-
+class HTTPProxyConfigurator < AbstractHTTPConfigurator
   def get_random_proxy() : HTTPProxy
-    r = Random.new(Time.local.to_unix)
-    proxy_adr = @proxy_list[r.next_int % @proxy_list.size]
+    status, output = run_cmd("shuf", ["-n 1", "#{@filename_to_save}"])
 
-    HTTPProxy.new(proxy_adr)
+    if status == 0
+      if output.includes?(":")
+        host_tuple = output.partition(":")
+        return HTTPProxy.new(proxy_host: host_tuple[0], proxy_port: host_tuple[2].to_i)
+      end
+      HTTPProxy.new(output)
+    else
+      #TODO
+      raise Exception.new
+    end
   end
 end

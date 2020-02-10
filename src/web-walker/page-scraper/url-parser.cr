@@ -14,7 +14,7 @@ class UrlParser < AbstractUrlParser
     end
 
     if is_valid_url?(relative_link)
-      relative_link
+      return relative_link
     else
       converted_link = parse_url_into_absolute()
       converted_link
@@ -26,7 +26,7 @@ class UrlParser < AbstractUrlParser
       return true
     end
 
-    return false
+    false
   end
 
   private def is_fragment_identifier?(link : String) : Bool
@@ -34,7 +34,7 @@ class UrlParser < AbstractUrlParser
       return true
     end
 
-    return false
+    false
   end
 
   private def parse_url_into_absolute : String
@@ -49,12 +49,11 @@ class UrlParser < AbstractUrlParser
   end
 
   private def protocol_relative_into_absolute : String
-    converted_link = @relative_link.as(String).gsub("//", "")
-    "https://" + converted_link
+    converted_link = @relative_link.as(String).gsub("//", "/")
+    @page_url.as(String) + converted_link
   end
 
   private def relative_into_absolute : String
-    link = URI.parse(@page_url.as(String)).resolve(@relative_link.as(String)).to_s
-    link
+    @page_url.as(String) + @relative_link.as(String)
   end
 end
